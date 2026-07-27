@@ -9,11 +9,11 @@ Our project studies **quantum machine learning for binary classification** throu
 implementation in Qiskit, where we reprodruce the two methods from Havlíček et al.,
 *Supervised learning with quantum-enhanced feature spaces* (Nature, 2019; arXiv:1804.11326).
 
- **Both** methods described in the paper are implemented, split between two sub-teams in our group:
+ **Both** methods described in the paper are implemented, split between the two sub-teams in our group:
 
-- **Quantum Kernel Estimation** — the quantum computer estimates a kernel (similarity) matrix
+- **Quantum Kernel Estimation** : the quantum computer estimates a kernel (similarity) matrix
   between data points; a classical support vector machine then finds the decision boundary.
-- **Variational Quantum Classifier (VQC)** — a parameterized quantum circuit is trained directly
+- **Variational Quantum Classifier (VQC)** : a parameterized quantum circuit is trained directly
   to separate the two classes.
 
 Both methods share the **same quantum feature map**, which is implemented once from primitive
