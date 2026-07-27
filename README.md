@@ -3,6 +3,7 @@
 **BWSI Quantum Software Final Project**
 
 **Status:** WORK IN PROGRESS. Environment and repo skeleton is complete; working on code and steps ATM
+
 **Tentative Deadlines:** code & simulation: 07/30 | video: 07/31 · 
 
 Our project studies **quantum machine learning for binary classification** through a manual
@@ -42,7 +43,7 @@ gates (H, RZ, CNOT) and reused. [tanush will finish writing this ]
 
 ## Datasets
 
-- **`ad_hoc` (primary).** The synthetic dataset from the paper
+- **`ad_hoc` (primary).** The actual dataset from the paper 
 
 + most likely iris as well --->
 - **`iris` (for check - not sure yet).** 
