@@ -1,3 +1,8 @@
-qiskit - 2.5.1
-pytest - 9.1.0
-tbd 
+qiskit==2.5.1
+qiskit-aer
+qiskit-machine-learning
+numpy
+scipy
+scikit-learn
+matplotlib
+pytest==9.1.0
