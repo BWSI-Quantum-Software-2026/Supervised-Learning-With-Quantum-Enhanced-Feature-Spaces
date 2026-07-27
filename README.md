@@ -2,10 +2,10 @@
 
 **BWSI Quantum Software Final Project**
 
-**Status:** WORK IN PROGRESS. Environment and repo skeleton is complete; working on code and steps
-**Deadline:** [TBD] · **Video:** [TBD]
+**Status:** WORK IN PROGRESS. Environment and repo skeleton is complete; working on code and steps ATM
+**Tentative Deadlines:** code & simulation: 07/30 | video: 07/31 · 
 
-This project studies **quantum machine learning for binary classification** through a manual
+Our project studies **quantum machine learning for binary classification** through a manual
 implementation in Qiskit, where we reprodruce the two methods from Havlíček et al.,
 *Supervised learning with quantum-enhanced feature spaces* (Nature, 2019; arXiv:1804.11326).
 
@@ -35,10 +35,8 @@ gates (H, RZ, CNOT) and reused. [tanush will finish writing this ]
 4. **Classify (quantum + classical).** 
 
 ## Method 2 — Variational Quantum Classifier
-(avanti and haya double check this)
+(avanti and haya willw rite the steps for this)
 
-
-*(Owned by the VQC sub-team; see `src/vqc/`.)*
 
 ---
 
