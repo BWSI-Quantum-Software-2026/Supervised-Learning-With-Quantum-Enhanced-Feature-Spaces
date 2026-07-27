@@ -1,8 +1,8 @@
-qiskit==2.5.1
+qiskit==2.2.3
 qiskit-aer
 qiskit-machine-learning
 numpy
 scipy
 scikit-learn
 matplotlib
-pytest==9.1.0
+pytest==8.4.2
