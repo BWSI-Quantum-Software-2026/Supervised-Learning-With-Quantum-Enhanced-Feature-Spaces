@@ -42,7 +42,7 @@ gates (H, RZ, CNOT) and reused. [tanush will finish writing this ]
 
 ## Datasets
 
-- **`ad_hoc` (primary).** The synthetic dataset from the paper
+- **`ad_hoc` (primary).** The actual dataset from the paper 
 
 + most likely iris as well --->
 - **`iris` (for check - not sure yet).** 
