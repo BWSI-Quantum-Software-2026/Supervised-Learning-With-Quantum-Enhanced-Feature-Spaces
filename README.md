@@ -3,6 +3,7 @@
 **BWSI Quantum Software Final Project**
 
 **Status:** WORK IN PROGRESS. Environment and repo skeleton is complete; working on code and steps ATM
+
 **Tentative Deadlines:** code & simulation: 07/30 | video: 07/31 · 
 
 Our project studies **quantum machine learning for binary classification** through a manual
