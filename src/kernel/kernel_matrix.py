@@ -13,7 +13,7 @@ def compute_kernel_matrix(A, B, shots, seed):
         for i in range(m):
             for j in range(m):
                 if j > i:
-                    value = estimate_kernel_entry(A[i], A[j], shots, seed)
+                    value = estimate_kernel_entry(A[i], A[j], shots=shots, seed=seed)
                     K[i][j] = value
                     K[j][i] = value  # same thing both ways
         return K
@@ -25,5 +25,5 @@ def compute_kernel_matrix(A, B, shots, seed):
         #  then just run every pair: @Tanush see if there is a shortcut here if run time matters
         for i in range(n):
             for j in range(p):
-                K[i][j] = estimate_kernel_entry(A[i], B[j], shots, seed)
+                K[i][j] = estimate_kernel_entry(A[i], B[j], shots=shots, seed=seed)
         return K
