@@ -2,7 +2,7 @@ import numpy as np
 from qiskit_aer import AerSimulator
 
 from .overlap_circuit import estimate_kernel_entry
-def compute_kernel_matrix(A, B, shots, seed):
+def compute_kernel_matrix(A, B=None, shots=4096, seed=None):
     # if you have no B jst compare A with itself
     if B is None:
         m = len(A)
