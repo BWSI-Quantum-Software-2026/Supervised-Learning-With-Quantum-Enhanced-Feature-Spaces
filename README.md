@@ -10,7 +10,7 @@ Our project studies **quantum machine learning for binary classification** throu
 implementation in Qiskit, where we reprodruce the two methods from Havlíček et al.,
 *Supervised learning with quantum-enhanced feature spaces* (Nature, 2019; arXiv:1804.11326).
 
- Both methods described in the paper are implemented, split between the two sub-teams in our group:
+ Both methods described in the paper are implemented, and we split them between two sub-teams in our group:
 
 - Quantum Kernel Estimation : the quantum computer estimates a kernel (similarity) matrix
   between data points; a classical support vector machine then finds the decision boundary.
