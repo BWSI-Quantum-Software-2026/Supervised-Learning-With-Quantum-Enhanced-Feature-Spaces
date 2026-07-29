@@ -22,7 +22,7 @@ def test_placeholder_vqc():
     assert model.calculate_parity("10") == -1
 
     #testing circuit qubit count
-    assert model.circuit.qubits == 2
+    assert model.circuit.num_qubits == 2
 
     #testing if output is deterministic for the fixed x and theta values
     x_val = np.array([0.5, 1.2])
