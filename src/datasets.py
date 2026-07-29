@@ -42,5 +42,13 @@ def load_iris_2feature(seed=0): # seed just has to be some fixed val
     X = X[keep]
     y = y[keep]
 
-   
+    # we have to rescale each feature into the (0, 2*pi] range for our rotation angles .
+    smallest = X.min(axis=0)
+    largest = X.max(axis=0)
+    X = (X - smallest) / (largest - smallest) * (2 * np.pi)
 
+    # Relabel the two classes as -1 / +1.
+    y = np.where(y == 0, -1, 1)
+
+    # default split for training & test (75/25) - as a reference - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html
+    return train_test_split(X, y, test_size=0.25, random_state=seed) 
