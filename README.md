@@ -18,7 +18,7 @@ implementation in Qiskit, where we reprodruce the two methods from Havlíček et
   to separate the two classes.
 
 Both methods share the *same quantum feature map*, which is implemented once from primitive
-gates (H, RZ, CNOT) and reused. [tanush will finish writing this ]
+gates (H, RZ, CNOT) and reused. 
 ---
 
 ## Background
@@ -34,20 +34,20 @@ Steps the paper took:
 7. Tested performance thoroughly - For the vqc, they tried circuits of increasing complexity and for the kernel method they tested three separate datasets
 
 
-### The feature map
+### The Feature Map
 - Classical SVMs are useful for inner products efficiently evaluated by feature vectors not for classifiers based on quantum circuits.
 - Integral to mapping our classical data points to Hilbert space and ensuring that our data is correctly parametrized for our VQC.
 - The feature map is implemented through this unitary circuit so that It can be hard to compute classically.
   UΦ(⃗x) = UΦ(⃗x)H⊗nUΦ(⃗x)H⊗n,
 
-## Method 1 — Quantum Kernel Estimation
+## Method 1 - Quantum Kernel Estimation
 (Expand)
 1. **Encode + overlap (quantum).** 
 2. **Assemble the kernel matrix (classical).** 
 3. **Train the SVM (classical).** 
 4. **Classify (quantum + classical).** 
 
-## Method 2 — Variational Quantum Classifier
+## Method 2 - Variational Quantum Classifier
 
 A quantum circuit with an classical optimizer that gets adjusted to minimize sorting mistakes 
 
