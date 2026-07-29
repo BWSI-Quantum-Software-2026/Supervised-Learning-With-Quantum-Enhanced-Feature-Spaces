@@ -93,8 +93,8 @@ A quantum circuit with an classical optimizer that gets adjusted to minimize sor
 
 | Member | Sub-team | Tasks (interchangeable) |
 |---|---|---|
-| [Tanush Kandpal] | Kernel | Overlap circuit + kernel matrix |
-| [Eshanth Penumatsa] | Kernel | Classical SVM + experiments + results |
+| [Tanush Kandpal] | Kernel | Overlap circuit + kernel matrix + experiments|
+| [Eshanth Penumatsa] | Kernel | Classical SVM + results |
 -- 
 | [Avanti Moghe] | VQC | Ansatz + circuit |
 | [Haya Fatima] | VQC | Training loop + results |
