@@ -18,41 +18,45 @@ implementation in Qiskit, where we reprodruce the two methods from Havlíček et
   to separate the two classes.
 
 Both methods share the *same quantum feature map*, which is implemented once from primitive
-gates (H, RZ, CNOT) and reused. [tanush will finish writing this ]
+gates (H, RZ, CNOT) and reused. 
 ---
 
 ## Background
 
 Steps the paper took: 
 
-1. quantum feature map - converts data into a quantum state
+1. Quantum feature map - converts data into a quantum state
 2. Manufactured their own test data - labeled each point "+1" or "−1" based on the threshold 
 3. quantum variational classifier - A quantum circuit with an classical optimizer that gets adjusted to minimize sorting mistakes 
-4. kernal estimator - used the quantum computer only to measure how similar every pair of training points is then fed that similarity table into a classical SVM 
+4. Kernel estimator - used the quantum computer only to measure how similar every pair of training points is then fed that similarity table into a classical SVM 
 5. Ran everything on IBM hardware -  used 2 qubits 
 6. Applied error mitigation  - ran each circuit at different speeds
 7. Tested performance thoroughly - For the vqc, they tried circuits of increasing complexity and for the kernel method they tested three separate datasets
 
 
-### The feature map
--- explanation needs to be written
+### The Feature Map
+- Classical SVMs are useful for inner products efficiently evaluated by feature vectors not for classifiers based on quantum circuits.
+- Integral to mapping our classical data points to Hilbert space and ensuring that our data is correctly parametrized for our VQC.
+- The feature map is implemented through this unitary circuit so that It can be hard to compute classically.
+  UΦ(⃗x) = UΦ(⃗x)H⊗nUΦ(⃗x)H⊗n,
 
-## Method 1 — Quantum Kernel Estimation
-(tanush and eshanth -- expand --)
+## Method 1 - Quantum Kernel Estimation
+(Expand)
 1. **Encode + overlap (quantum).** 
 2. **Assemble the kernel matrix (classical).** 
 3. **Train the SVM (classical).** 
 4. **Classify (quantum + classical).** 
 
-## Method 2 — Variational Quantum Classifier
+## Method 2 - Variational Quantum Classifier
 
 A quantum circuit with an classical optimizer that gets adjusted to minimize sorting mistakes 
 
-1. encodes a data point as a quantum state
-2. applies the circuit
-3. measures the result
-4. maps the outcome to a label
-5. trains the adjustable parameters using a classical optimization algorithm (SPSA) to minimize sorting mistakes on the training data
+1. **Encodes a data point as a quantum state.**
+2. **Applies the circuit.**
+3. **Measures the result.**
+4. **Maps the outcome to a label.**
+5. **Trains the adjustable parameters using a classical optimization algorithm (SPSA) to minimize sorting mistakes on the training data.**
+   (Expand)
 
 
 ## Datasets
