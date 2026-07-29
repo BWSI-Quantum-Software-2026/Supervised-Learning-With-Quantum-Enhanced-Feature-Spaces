@@ -25,10 +25,10 @@ gates (H, RZ, CNOT) and reused. [tanush will finish writing this ]
 
 Steps the paper took: 
 
-1. quantum feature map - converts data into a quantum state
+1. Quantum feature map - converts data into a quantum state
 2. Manufactured their own test data - labeled each point "+1" or "−1" based on the threshold 
 3. quantum variational classifier - A quantum circuit with an classical optimizer that gets adjusted to minimize sorting mistakes 
-4. kernal estimator - used the quantum computer only to measure how similar every pair of training points is then fed that similarity table into a classical SVM 
+4. Kernel estimator - used the quantum computer only to measure how similar every pair of training points is then fed that similarity table into a classical SVM 
 5. Ran everything on IBM hardware -  used 2 qubits 
 6. Applied error mitigation  - ran each circuit at different speeds
 7. Tested performance thoroughly - For the vqc, they tried circuits of increasing complexity and for the kernel method they tested three separate datasets
@@ -41,7 +41,7 @@ Steps the paper took:
   UΦ(⃗x) = UΦ(⃗x)H⊗nUΦ(⃗x)H⊗n,
 
 ## Method 1 — Quantum Kernel Estimation
-(tanush and eshanth -- expand --)
+(Expand)
 1. **Encode + overlap (quantum).** 
 2. **Assemble the kernel matrix (classical).** 
 3. **Train the SVM (classical).** 
@@ -56,7 +56,7 @@ A quantum circuit with an classical optimizer that gets adjusted to minimize sor
 3. **Measures the result.**
 4. **Maps the outcome to a label.**
 5. **Trains the adjustable parameters using a classical optimization algorithm (SPSA) to minimize sorting mistakes on the training data.**
-   Have to expand according to our code)
+   (Expand)
 
 
 ## Datasets
