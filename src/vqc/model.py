@@ -3,6 +3,7 @@ import numpy as np
 from qiskit.primitives import StatevectorSampler as Sampler
 from src.feature_map import apply
 from src.vqc.ansatz import ansatz
+self: VQCModel
 
 
 
