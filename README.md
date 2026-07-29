@@ -51,11 +51,12 @@ Steps the paper took:
 
 A quantum circuit with an classical optimizer that gets adjusted to minimize sorting mistakes 
 
-1. encodes a data point as a quantum state
-2. applies the circuit
-3. measures the result
-4. maps the outcome to a label
-5. trains the adjustable parameters using a classical optimization algorithm (SPSA) to minimize sorting mistakes on the training data
+1. **Encodes a data point as a quantum state.**
+2. **Applies the circuit.**
+3. **Measures the result.**
+4. **Maps the outcome to a label.**
+5. **Trains the adjustable parameters using a classical optimization algorithm (SPSA) to minimize sorting mistakes on the training data.**
+   Have to expand according to our code)
 
 
 ## Datasets
