@@ -77,7 +77,28 @@ A quantum circuit with an classical optimizer that gets adjusted to minimize sor
 
 
 ## Structure of repistory 
-[Still to be written]
+- src
+   - kernel
+     - classify.py
+     - kernel_matrix.py
+     - overlap_circuit.py
+   - vqc
+     - ansatz.py
+     - model.py
+     - optimizer.py
+     - train.py
+   - datasets.py
+   - feature_map.py
+- tests
+   - test_feature_map.py
+   - test_kernel.py
+   - test_vqc.py
+- conftest.py
+- README.md
+- pytest.ini
+- requirements.ini
+
+
 
 
 ## Setup
