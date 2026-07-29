@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt #draws and saves the training-loss chart
 
-#settings (used to live in a config file)
+#settings (used to be in the config file)
 N_QUBITS = 2
 ANSATZ_REPS = 1
 MAX_ITERS = 50
