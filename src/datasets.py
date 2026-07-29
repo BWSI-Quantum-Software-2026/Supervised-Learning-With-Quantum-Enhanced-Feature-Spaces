@@ -42,7 +42,7 @@ def load_iris_2feature(seed=0): # seed just has to be some fixed val
     X = X[keep]
     y = y[keep]
 
-    # we have to rescale each feature into the (0, 2*pi] range for our rotation angles .
+    # we have to rescale each feature into the 0, 2pi range for our rotation angles .
     smallest = X.min(axis=0)
     largest = X.max(axis=0)
     X = (X - smallest) / (largest - smallest) * (2 * np.pi)
