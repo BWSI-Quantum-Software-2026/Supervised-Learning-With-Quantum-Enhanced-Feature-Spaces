@@ -13,7 +13,6 @@ def apply(qc,x):
 def feature_map_circuit(x):
     if x.shape != (2,):
         raise ValueError("Feature map only supports 2 qubits/features") # since circuit is hard-coded to 2 qubits, x has to be 2 features
-
     qc = QuantumCircuit(2)
     qc.h(range(2))          # first Hadamard layer
     apply(qc, x)  # first encode block
