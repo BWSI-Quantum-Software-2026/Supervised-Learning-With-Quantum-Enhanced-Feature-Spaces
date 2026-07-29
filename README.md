@@ -44,20 +44,18 @@ Steps the paper took:
 A quantum computer used to measure how similar every pair of training points is then fed that similarity table into an classical SVM solver.
 
 1.**Encode + overlap (quantum):** Encode point A, then run the reverse encoding for point B, then measure the chance of landing back on all zeros (similarity score).
-2. **Assemble the kernel matrix (classical):** Collect all pairwise similarity scores into a table (matrix).
+2. **Assemble the kernel matrix (classical):** Collect all pairwise similarity scores into a table (matrix). 
 3. **Train the SVM (classical):** Feed that matrix into a normal SVM solver to find the best decision boundary.
 4. **Classify (quantum + classical).** Get a new points similarity to training points, and plug those scores into the trained SVM's formula to get the final answer. 
 
 ## Method 2 - Variational Quantum Classifier
-
 A quantum circuit with an classical optimizer that gets adjusted to minimize sorting mistakes 
 
-1. **Encodes a data point as a quantum state.**
-2. **Applies the circuit.**
-3. **Measures the result.**
-4. **Maps the outcome to a label.**
-5. **Trains the adjustable parameters using a classical optimization algorithm (SPSA) to minimize sorting mistakes on the training data.**
-   (Expand)
+1. **Encode data as a quantum state:** Each feature of the data point sets a rotation angle on a qubit, lifting the data into a high-dimensional quantum space
+2. **Apply the circuit:** A parameterized quantum circuit transforms the state
+3. **Measure the result:** The qubits collapse into classical 0/1 outcomes and repeating this many times gives a probability distribution.
+4. **Map outcome to label:** A rule that turns the measured probability into a classification.
+5. **Train with SPSA:** Parameters start random and are adjusted to reduce wrong classification. SPSA estimates the gradient using two circuit evaluations per step (adjusting all parameters together)
 
 
 ## Datasets
