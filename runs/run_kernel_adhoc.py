@@ -6,7 +6,7 @@ from src.kernel.classify import train_svm, predict_svm
 
 def main(shots=4096, seed=1): # just the default values for shots and seed
     # gets the data + training_size is per class so 15 means 30 training points and 5 means 10 test points 
-    train_X, train_y, test_X, test_y = load_adhoc(training_size=15, test_size=5)
+    train_X, train_y, test_X, test_y = load_adhoc(training_size=20, test_size=10)
 
     # this is the quantum part - compare every training point against every other one and then build the similarity matrix 
     print("Kernel matrix is being computed")
