@@ -1,8 +1,9 @@
 
 import numpy as np
 from qiskit.primitives import StatevectorSampler as Sampler
-from src.feature_map import apply
+from src.feature_map import feature_map_circuit
 from src.vqc.ansatz import ansatz
+
 
 
 
@@ -11,7 +12,7 @@ class VQCModel:
         self.num_qubits = qubits
         self.reps = repetitions
    
-        self.feature_map, self.x = apply(qubits, repetitions)
+        self.feature_map, self.x = feature_map_circuit(qubits)
         self.ansatz, self.theta = ansatz(qubits, repetitions)
         
        
