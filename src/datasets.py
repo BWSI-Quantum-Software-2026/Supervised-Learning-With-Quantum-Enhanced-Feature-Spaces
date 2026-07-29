@@ -51,4 +51,6 @@ def load_iris_2feature(seed=0): # seed just has to be some fixed val
     y = np.where(y == 0, -1, 1)
 
     # default split for training & test (75/25) - as a reference - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html
-    return train_test_split(X, y, test_size=0.25, random_state=seed) 
+    # sklearn gives these back as X_train, X_test, y_train, y_test abnd we have to reorder so both loaders in froim runs return the same thing
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=seed)
+    return X_train, y_train, X_test, y_test
