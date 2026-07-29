@@ -39,9 +39,7 @@ Steps the paper took:
 - Integral to mapping our classical data points to Hilbert space and ensuring that our data is correctly parametrized for our VQC.
 - The feature map is implemented through this unitary circuit so that It can be hard to compute classically.
 
- ``math
 U_\Phi(\vec{x}) = U_\Phi(\vec{x}) H^{\otimes n} U_\Phi(\vec{x}) H^{\otimes n}
-```
 
 ## Method 1 - Quantum Kernel Estimation
 A quantum computer used to measure how similar every pair of training points is then fed that similarity table into an classical SVM solver.
