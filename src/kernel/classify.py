@@ -11,6 +11,6 @@ def train_svm(K_train, y_train, C=1.0):
 
 
 def predict_svm(classifier, K_test_train):
-    # K_test_train holds each test point's similarity to every training point.
+    # K_test_train holds each test point's similarity to every training point
     # and then sklearn uses those plus the boundary it learned to label each one +1 or -1 
     return classifier.predict(K_test_train)
