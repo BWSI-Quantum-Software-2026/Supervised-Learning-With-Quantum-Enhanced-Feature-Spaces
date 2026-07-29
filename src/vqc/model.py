@@ -7,7 +7,7 @@ from src.vqc.ansatz import ansatz
 
 
 class VQCModel:
-    def initialize(self, qubits, repetitions): #starts of my class with the parameters and circuits that i need
+    def __init__(self, qubits, repetitions): #starts of my class with the parameters and circuits that i need
         self.num_qubits = qubits
         self.reps = repetitions
    
@@ -58,7 +58,7 @@ class VQCModel:
 
         for bitstring, count in counts.items():
             prob = count/total_shots
-            exepctation_val += self.calculate_parity(bitstring) * prob
+            expectation_val += self.calculate_parity(bitstring) * prob
         return expectation_val
 
     def label(self, x_val, theta_val) -> int:
