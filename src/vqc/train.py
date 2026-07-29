@@ -30,27 +30,27 @@ def main():
 
     np.random.seed(configparser.RANDOM_SEED) #same random numbers every run
 
-    #Step 1 - makes the training and test data
+    #makes the training and test data
     x_train, y_train, x_test, = load_ad_hoc_dataset(
         training_size=20, test_size=20, n=configparser.N_QUBITS, gap=0.3
     )
 
-    #Step 2: initial parameters theta 
+    #initial parameters theta 
     theta_params = QuantumCircuit(configparser.N_QUBITS, configparser.ANSATZ_REPS) #builds the circuit and gets its parameters 
     theta_init = np.random.uniform (0, 2 * np.pi, size=len(theta_params)) #starts with random values for those parameters
 
-    #Steps 3-6: train
+    #=train
     loss_fn = make_loss_function(x_train, y_train) #set up the loss functionn using our data
     theta_star, loss_history = train(theta_init, loss_fn, method= "spsa", max_iters=configparser.MAX_ITERS) #trian the model and get the best parameters and loss over time 
 
-    #Step 7: evaluate and plot 
+    #=evaluate and plot 
     train_acc = evaluate_accuracy(x_train, y_train, theta_star) #checks the accuracy on the trianing data 
     test_acc = evaluate_accuracy(x_train, y_train, theta_star) #checks the accuracy on the test data
     print (f"Train accuracy: {train_acc:.2%}") #prints training accuracy score 
     print (f"Train accuracy: {test_acc:.2%}") #prints testing accuracy score  
 
     plt.plot(loss_history) #plots how the loss changed during training 
-    plt.xlabel("Iteration")
-    plt.ylabel ("Traning Loss")
-    plt.savefig("tranin_curve.png")
+    plt.xlabel("Iteration") #x-axis
+    plt.ylabel ("Traning Loss") #y-axis
+    plt.savefig("traning_curve.png") #save chart as a image
     plt.show() 
