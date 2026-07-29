@@ -2,7 +2,7 @@ import numpy as np
 from qiskit.primitives import StatevectorSampler as Sampler
 from src.feature_map import feature_map_circuit
 from src.vqc.ansatz import ansatz
-from src.vqc.optimizer import train #the classical optimizer loop that fit() uses
+from src.vqc.optimizer import train # this is the classical optimizer loop that fit() uses
 from qiskit.circuit import ParameterVector
 
 
@@ -77,28 +77,23 @@ class VQCModel:
             return -1
 
     def fit(self, X, y, method="spsa", max_iters=50, seed=42):
-        """
-        trains the circuit -- hunts for the theta that gets the most labels right.
-        this is the vqc version of sklearn's .fit(), the kernel team gets this step
-        for free from sklearn but we have to run the optimizer ourselves
-        """
-        rng = np.random.default_rng(seed)
-        theta_start = rng.uniform(0, 2 * np.pi, len(self.theta)) #random starting angles
+        # needed to find the theta that gets the most labels right. sklearn does this step for kernel side and we have to run the optimizer ourselves
 
-        def loss(theta): #the optimizer calls this over and over with different theta
-            scores = [self.expectation_value(x, theta) for x in X] #score every training point
-            #mean squared error, so the closer each score sits to its real -1/+1 label the lower this gets
-            return float(np.mean((np.array(y) - np.array(scores)) ** 2))
+        rng = np.random.default_rng(seed)
+        theta_start = rng.uniform(0, 2 * np.pi, len(self.theta)) # this just makes sure it starts at at random angles
+
+        def loss(theta): # optimizer.py keeps calling this with different theta
+            scores = [self.expectation_value(x, theta) for x in X]
+            return float(np.mean((np.array(y) - np.array(scores)) ** 2)) # the squared error vs the real labels
 
         self.theta_star, self.history = train(theta_start, loss, method=method, max_iters=max_iters)
-        return self #so you can chain it like model.fit(X, y).score(...)
+        return self
 
     def score(self, X, y) -> float:
-        """
-        how many labels we get right on X, as a fraction. has to be called after fit()
-        """
+        # fraction of labels we get right. needs fit() to have run first
+    
         if not hasattr(self, "theta_star"):
-            raise RuntimeError("call fit() before score() -- theta hasnt been trained yet")
+            raise RuntimeError("call fit() before score()")
 
         predictions = [self.label(x, self.theta_star) for x in X]
         return float(np.mean(np.array(predictions) == np.array(y)))
