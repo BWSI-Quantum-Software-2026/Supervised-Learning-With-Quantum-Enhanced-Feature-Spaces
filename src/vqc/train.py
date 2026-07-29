@@ -7,10 +7,10 @@ train = any
 np = any
 
 import configparser #holds contants (settings file)
-from data_loader import load_ad_hoc_dataset #imports the traning and tesst data 
+from feature_map import load_ad_hoc_dataset #imports the traning and tesst data 
 from model import predict_expectation, predict_label, compute_loss #predict_expectation: runs the quantum circuit, predict_label: turns the value into 0 or 1, compute_loss: compares predictions to true labels and returns a loss number 
 from optimizer import train #runs the classical optimization loop 
-from quantum_circuits import geta_ansatz #builds ansatz (the circuit) and lists its parameters 
+from ansatz import QuantumCircuit #builds ansatz (the circuit) and lists its parameters 
 
 def make_loss_function(x_train, y_train): #function the optimizer will call 
    
@@ -36,7 +36,7 @@ def main():
     )
 
     #Step 2: initial parameters theta 
-    theta_params = geta_ansatz(configparser.N_QUBITS, configparser.ANSATZ_REPS) #builds the circuit and gets its parameters 
+    theta_params = QuantumCircuit(configparser.N_QUBITS, configparser.ANSATZ_REPS) #builds the circuit and gets its parameters 
     theta_init = np.random.uniform (0, 2 * np.pi, size=len(theta_params)) #starts with random values for those parameters
 
     #Steps 3-6: train
@@ -54,5 +54,3 @@ def main():
     plt.ylabel ("Traning Loss")
     plt.savefig("tranin_curve.png")
     plt.show() 
-
-if__name__ == "__main__": main() #only run main if this file is run directly 
