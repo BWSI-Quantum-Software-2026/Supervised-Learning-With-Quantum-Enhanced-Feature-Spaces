@@ -18,5 +18,5 @@ def estimate_kernel_entry(x, z, shots = 4096, simulator = None, seed = None):
     qc = circuit_overlap(x, z)
     a = simulator.run(qc, shots=shots, seed_simulator = seed).result()
     counts = a.get_counts()
-    return counts.get('00', 0) / shots # this is the overlap -- measure of how similar x and z are
+    return counts.get('00', 0) / shots # this is the overlap -- measure of how similar x and z are by the fraction of 00
 
