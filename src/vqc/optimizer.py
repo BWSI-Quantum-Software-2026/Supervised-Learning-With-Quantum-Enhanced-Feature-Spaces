@@ -1,19 +1,15 @@
 
 #SPSA: optimization method - only needs 2 curcuit evaluations per step (regaurdless of how many parameters theta has)
 
-#Functions (adjust based on the data set)
-delta:any
-theta:any 
-loss_fn:any
-c:any
-a:any
-gradient_estimate:any
-spsa_step:any
+import numpy as np
 
-import numpy as np 
-import configparser #settings file (stores information)
+# knobs -- a is how big a step we take, c is how far we peek in each direction
+LEARNING_RATE = 0.01
+SPSA_PERTURBATION = 0.1
+MAX_ITERS = 100
 
-def spasa_step (theta, loss_fn, a:float = configparser.LEARNING_RATE, c:float = configparser.SPSA_PERTURABATION): 
+
+def spsa_step (theta, loss_fn, a:float = LEARNING_RATE, c:float = SPSA_PERTURBATION):
 #SPSA - it wil nudge every parameter randomlly, check if it helped, then step in whichever direction is closer
 
     delta = np.random.choice([-1,1], size = len(theta)) #a coin flip for every parameter (+1 means nudge it up and -1 meeans nudge it down)
@@ -43,19 +39,19 @@ def parameter_shift_gradient(theta, loss_fn, shift: float = np.pi / 2):
 
     return grad 
 
-def gradient_descent_step(theta, gradient, learning_rate: float = configparser.LEARNING_RATE): 
+def gradient_descent_step(theta, gradient, learning_rate: float = LEARNING_RATE):
 #we which way to move (gradient) - now we just take a small step that way 
     return theta - learning_rate * gradient 
 
-def train(theta_init, loss_fn, method: str = "spsa", max_iters: int = configparser.MAX_ITERS):
+def train(theta_init, loss_fn, method: str = "spsa", max_iters: int = MAX_ITERS):
 #runs the classical optimization loop (spsa)
 #cobyla is like a baseline
    
     theta = np.array(theta_init, dtype=float) #start form the first guess of the parameters 
 
     #lets scipy's optimizer handle everything and just return its answer
-    if method == "coblyla":
-        from scripy.optimize import minimize 
+    if method == "cobyla":
+        from scipy.optimize import minimize
         result = minimize (loss_fn, theta, method="COBYLA", options={"maxiter": max_iters})
         return result.x, [result.fun]
     
