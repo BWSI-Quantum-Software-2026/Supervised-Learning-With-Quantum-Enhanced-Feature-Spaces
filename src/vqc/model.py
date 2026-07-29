@@ -2,6 +2,7 @@ import numpy as np
 from qiskit.primitives import StatevectorSampler as Sampler
 from src.feature_map import feature_map_circuit
 from src.vqc.ansatz import ansatz
+from src.vqc.optimizer import train # this is the classical optimizer loop that fit() uses
 from qiskit.circuit import ParameterVector
 
 
@@ -74,5 +75,27 @@ class VQCModel:
             return 1
         else:
             return -1
+
+    def fit(self, X, y, method="spsa", max_iters=50, seed=42):
+        # needed to find the theta that gets the most labels right. sklearn does this step for kernel side and we have to run the optimizer ourselves
+
+        rng = np.random.default_rng(seed)
+        theta_start = rng.uniform(0, 2 * np.pi, len(self.theta)) # this just makes sure it starts at at random angles
+
+        def loss(theta): # optimizer.py keeps calling this with different theta
+            scores = [self.expectation_value(x, theta) for x in X]
+            return float(np.mean((np.array(y) - np.array(scores)) ** 2)) # the squared error vs the real labels
+
+        self.theta_star, self.history = train(theta_start, loss, method=method, max_iters=max_iters)
+        return self
+
+    def score(self, X, y) -> float:
+        # fraction of labels we get right. needs fit() to have run first
+    
+        if not hasattr(self, "theta_star"):
+            raise RuntimeError("call fit() before score()")
+
+        predictions = [self.label(x, self.theta_star) for x in X]
+        return float(np.mean(np.array(predictions) == np.array(y)))
 
         
