@@ -1,56 +1,65 @@
 
-import numpy as py 
-import matplotlib.pyplot as plt #draws and saves the training-loss chart 
+import numpy as np
+import matplotlib.pyplot as plt #draws and saves the training-loss chart
 
-#variables:
-train = any 
-np = any
+#settings (used to live in a config file)
+N_QUBITS = 2
+ANSATZ_REPS = 1
+MAX_ITERS = 50
+RANDOM_SEED = 42
 
-import configparser #holds contants (settings file)
-from feature_map import load_ad_hoc_dataset #imports the traning and tesst data 
-from model import predict_expectation, predict_label, compute_loss #predict_expectation: runs the quantum circuit, predict_label: turns the value into 0 or 1, compute_loss: compares predictions to true labels and returns a loss number 
-from optimizer import train #runs the classical optimization loop 
-from ansatz import QuantumCircuit #builds ansatz (the circuit) and lists its parameters 
+from src.datasets import load_adhoc #imports the traning and tesst data
+from src.vqc.model import VQCModel #expectation_value: runs the quantum circuit, label: turns the value into -1 or +1
+from src.vqc.optimizer import train #runs the classical optimization loop
 
-def make_loss_function(x_train, y_train): #function the optimizer will call 
-   
-    def loss (theta): 
 
-        y_pred = [predict_expectation(x, theta) for x in x_train] #get a prediction for each training point 
-        return compute_loss(y_train, y_pred, kind="mse") #compares predictions to real answers 
+def compute_loss(y_true, y_pred): #compares predictions to true labels and returns a loss number
+    #mean squared error. y_pred are the raw scores in [-1,1] and y_true is -1/+1, so the
+    #closer the score sits to the real label the smaller this gets
+    return float(np.mean((np.array(y_true) - np.array(y_pred)) ** 2))
 
-    return loss 
 
-def evaluate_accuracy(x_data, y_true, theta) -> float: 
+def make_loss_function(model, x_train, y_train): #function the optimizer will call
 
-    y_pred = [predict_label(x,theta) for x in x_data] #predicts a label for each data point 
-    return float(np.mean(np.array(y_pred) == np.array(y_true))) # % of predictions that match the real labels 
+    def loss (theta):
+
+        y_pred = [model.expectation_value(x, theta) for x in x_train] #get a prediction for each training point
+        return compute_loss(y_train, y_pred) #compares predictions to real answers
+
+    return loss
+
+def evaluate_accuracy(model, x_data, y_true, theta) -> float:
+
+    y_pred = [model.label(x, theta) for x in x_data] #predicts a label for each data point
+    return float(np.mean(np.array(y_pred) == np.array(y_true))) # % of predictions that match the real labels
 
 def main():
 
-    np.random.seed(configparser.RANDOM_SEED) #same random numbers every run
+    np.random.seed(RANDOM_SEED) #same random numbers every run
 
     #makes the training and test data
-    x_train, y_train, x_test, = load_ad_hoc_dataset(
-        training_size=20, test_size=20, n=configparser.N_QUBITS, gap=0.3
-    )
+    train_X, train_y, test_X, test_y = load_adhoc(training_size=6, test_size=5)
 
-    #initial parameters theta 
-    theta_params = QuantumCircuit(configparser.N_QUBITS, configparser.ANSATZ_REPS) #builds the circuit and gets its parameters 
-    theta_init = np.random.uniform (0, 2 * np.pi, size=len(theta_params)) #starts with random values for those parameters
+    #initial parameters theta
+    model = VQCModel(qubits=N_QUBITS, repetitions=ANSATZ_REPS) #builds the circuit and gets its parameters
+    theta_init = np.random.uniform (0, 2 * np.pi, size=len(model.theta)) #starts with random values for those parameters
 
     #=train
-    loss_fn = make_loss_function(x_train, y_train) #set up the loss functionn using our data
-    theta_star, loss_history = train(theta_init, loss_fn, method= "spsa", max_iters=configparser.MAX_ITERS) #trian the model and get the best parameters and loss over time 
+    loss_fn = make_loss_function(model, train_X, train_y) #set up the loss functionn using our data
+    theta_star, loss_history = train(theta_init, loss_fn, method= "spsa", max_iters=MAX_ITERS) #trian the model and get the best parameters and loss over time
 
-    #=evaluate and plot 
-    train_acc = evaluate_accuracy(x_train, y_train, theta_star) #checks the accuracy on the trianing data 
-    test_acc = evaluate_accuracy(x_train, y_train, theta_star) #checks the accuracy on the test data
-    print (f"Train accuracy: {train_acc:.2%}") #prints training accuracy score 
-    print (f"Train accuracy: {test_acc:.2%}") #prints testing accuracy score  
+    #=evaluate and plot
+    train_acc = evaluate_accuracy(model, train_X, train_y, theta_star) #checks the accuracy on the trianing data
+    test_acc = evaluate_accuracy(model, test_X, test_y, theta_star) #checks the accuracy on the test data
+    print (f"Train accuracy: {train_acc:.2%}") #prints training accuracy score
+    print (f"Test accuracy: {test_acc:.2%}") #prints testing accuracy score
 
-    plt.plot(loss_history) #plots how the loss changed during training 
+    plt.plot(loss_history) #plots how the loss changed during training
     plt.xlabel("Iteration") #x-axis
     plt.ylabel ("Traning Loss") #y-axis
-    plt.savefig("traning_curve.png") #save chart as a image
-    plt.show() 
+    plt.savefig("results/figures/traning_curve.png") #save chart as a image
+
+
+# makes sure that importing this file doesnt kick off a whole training run
+if __name__ == "__main__":
+    main()
