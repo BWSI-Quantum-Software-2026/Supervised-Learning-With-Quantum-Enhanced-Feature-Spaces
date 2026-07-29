@@ -28,7 +28,7 @@ def test_kernel_symmetry():
     # flipping the order shouldnt change the answer
     x = np.array([0.5, 1.2])
     z = np.array([2.0, 0.3])
-assert abs(estimate_kernel_entry(x, z, shots=8192, seed=42) - estimate_kernel_entry(z, x, shots=8192, seed=42)) < TOL
+    assert abs(estimate_kernel_entry(x, z, shots=8192, seed=42) - estimate_kernel_entry(z, x, shots=8192, seed=42)) < TOL
 
 
 def test_matrix_is_symmetric_with_unit_diagonal():
