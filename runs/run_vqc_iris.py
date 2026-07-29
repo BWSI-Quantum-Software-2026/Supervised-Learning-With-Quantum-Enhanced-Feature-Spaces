@@ -1,8 +1,7 @@
 
 
-from src.datasets import load_iris_2feature
+from src.datasets import load_adhoc
 from src.vqc.model import VQCModel
-
 
 def main(shots=4096, seed=1, n_train=30, n_test=10):
     train_X, train_y, test_X, test_y = load_iris_2feature(seed=seed)
