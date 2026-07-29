@@ -41,11 +41,12 @@ Steps the paper took:
   UΦ(⃗x) = UΦ(⃗x)H⊗nUΦ(⃗x)H⊗n,
 
 ## Method 1 - Quantum Kernel Estimation
-(Expand)
-1. **Encode + overlap (quantum).** 
-2. **Assemble the kernel matrix (classical).** 
-3. **Train the SVM (classical).** 
-4. **Classify (quantum + classical).** 
+A quantum computer used to measure how similar every pair of training points is then fed that similarity table into an classical SVM solver.
+
+1.**Encode + overlap (quantum):** Encode point A, then run the reverse encoding for point B, then measure the chance of landing back on all zeros (similarity score).
+2. **Assemble the kernel matrix (classical):** Collect all pairwise similarity scores into a table (matrix).
+3. **Train the SVM (classical):** Feed that matrix into a normal SVM solver to find the best decision boundary.
+4. **Classify (quantum + classical).** Get a new points similarity to training points, and plug those scores into the trained SVM's formula to get the final answer. 
 
 ## Method 2 - Variational Quantum Classifier
 
