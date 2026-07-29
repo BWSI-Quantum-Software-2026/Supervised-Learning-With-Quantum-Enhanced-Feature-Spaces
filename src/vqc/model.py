@@ -1,8 +1,8 @@
-
 import numpy as np
 from qiskit.primitives import StatevectorSampler as Sampler
 from src.feature_map import feature_map_circuit
 from src.vqc.ansatz import ansatz
+from qiskit.circuit import ParameterVector
 
 
 
@@ -12,14 +12,15 @@ class VQCModel:
         self.num_qubits = qubits
         self.reps = repetitions
    
-        self.feature_map, self.x = feature_map_circuit(qubits)
+        self.x = ParameterVector('x', qubits)
+        self.feature_map = feature_map_circuit(np.array(list(self.x)))        
         self.ansatz, self.theta = ansatz(qubits, repetitions)
         
        
         self.circuit = self.feature_map.compose(self.ansatz)
         self.circuit.measure_all()
-        
-        self.sampler = Sampler()
+    
+        self.sampler = Sampler(seed = 42)  # make it so that its seeded so results are the same
 
     def calculate_parity(self, bitstring: str) -> int: #looks at characters 
         """
