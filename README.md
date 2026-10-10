@@ -2,7 +2,7 @@
 
 **BWSI Quantum Software Final Project**
 
-**Status:** DONE. Both methods are implemented, tested, and run end to end on the simulator. Results are below and in `docs/RESULTS.md`.
+**Status:** Both methods are implemented, tested, and run end to end on the simulator. Results are below and in `docs/RESULTS.md`.
 
 Our project studies **quantum machine learning for binary classification** through a manual
 implementation in Qiskit, where we reproduce the two methods from Havlíček et al.,
