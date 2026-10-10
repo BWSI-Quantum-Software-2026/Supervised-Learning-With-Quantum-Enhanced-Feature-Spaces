@@ -2,7 +2,7 @@
 
 **BWSI Quantum Software Final Project**
 
-**Status:** COMPLETE. Both methods are implemented, tested, and run end to end on the simulator. Results are in the [Results](#results) section below and in `docs/RESULTS.md`.
+**Status:** DONE. Both methods are implemented, tested, and run end to end on the simulator. Results are below and in `docs/RESULTS.md`.
 
 Our project studies **quantum machine learning for binary classification** through a manual
 implementation in Qiskit, where we reproduce the two methods from Havlíček et al.,
@@ -38,19 +38,15 @@ Steps the paper took:
 - Integral to mapping our classical data points to Hilbert space and ensuring that our data is correctly parametrized for our VQC.
 - The feature map is implemented through this unitary circuit so that it can be hard to compute classically.
 
-Written out in plain text (the full derivation is in `docs/MATH.md`), the map applied to the all-zero state is:
+The circuit itself (math is in `docs/MATH.md`):
 
 ```
 U_Phi(x) = U_encode(x) · H^n · U_encode(x) · H^n
 ```
 
-So it's Hadamards on every qubit, an encoding block, then the same thing again. For our 2 qubits the encoding block is just
-Z-rotations on each qubit using the data values directly, plus one ZZ term between the two qubits whose angle is
-`(pi - x0) * (pi - x1)`. That ZZ term is the entangling part and is what makes the kernel (conjecturally) hard to compute classically.
-In code this is `src/feature_map.py` and it is only ~15 lines.
+Basically H on both qubits, encode, H again, encode again. For 2 qubits the encode block is a Z rotation on each qubit using the data value directly + a ZZ rotation between them with angle `(pi - x0)(pi - x1)`. The ZZ part is what entangles the qubits and is the whole reason the kernel is supposed to be hard classically. The whole thing is in `src/feature_map.py` and is like 15 lines.
 
-One gotcha we hit: Qiskit's `rz(theta)` is `exp(-i*theta*Z/2)` but the paper writes `exp(i*phi*Z)`, so every rotation angle in our
-code is `-2 * phi`. See `docs/MATH.md` if you ever change the feature map.
+Something that tripped us up: qiskit's `rz(theta)` is `exp(-i*theta*Z/2)` but the paper uses `exp(i*phi*Z)`, so every angle we pass in has to be `-2 * phi`. Check `docs/MATH.md` before touching the feature map.
 
 ## Method 1 - Quantum Kernel Estimation
 A quantum computer used to measure how similar every pair of training points is then fed that similarity table into a classical SVM solver.
@@ -72,23 +68,23 @@ A quantum circuit with a classical optimizer that gets adjusted to minimize sort
 
 3. **Measure the result:** The qubits collapse into classical 0/1 outcomes and repeating this many times gives a probability distribution.
 
-4. **Map outcome to label:** A rule that turns the measured probability into a classification. We use parity: an even number of 1s in the bitstring means +1, odd means −1.
+4. **Map outcome to label:** A rule that turns the measured probability into a classification. We use parity, even number of 1s in the bitstring = +1, odd = −1.
 
-5. **Train with SPSA:** Parameters start random and are adjusted to reduce wrong classification. SPSA estimates the gradient using two circuit evaluations per step (adjusting all parameters together). We also have COBYLA (through scipy) and the parameter-shift rule in `src/vqc/optimizer.py` since on the ad_hoc data COBYLA ended up converging a lot better than SPSA.
+5. **Train with SPSA:** Parameters start random and are adjusted to reduce wrong classification. SPSA estimates the gradient using two circuit evaluations per step (adjusting all parameters together). We also have COBYLA (scipy) and parameter shift in `src/vqc/optimizer.py`, on ad_hoc COBYLA converged way better than SPSA so thats what that run uses.
 
 
 ## Datasets
 
-Both loaders live in `src/datasets.py` and return `train_X, train_y, test_X, test_y` with labels as −1/+1 so the kernel and VQC sides can use them interchangeably.
+Both are in `src/datasets.py` and give back `train_X, train_y, test_X, test_y` with −1/+1 labels so the kernel side and the VQC side can use the same thing.
 
-- **`ad_hoc` (primary).** The actual dataset from the paper, pulled from `qiskit_machine_learning.datasets.ad_hoc_data` with 2 features and `gap=0.3`. It is generated so that our exact feature map can separate it, which means a high accuracy here shows the implementation is *correct*, not that quantum beats classical. We seed it so everyone gets the same points.
-- **`iris` (reality check).** The classic scikit-learn iris set, cut down to 2 of the 4 features (petal length and width) and 2 of the 3 species so it fits on our 2 qubits. This data was not designed around our feature map at all, so it tells us whether the method does anything on data that wasn't built for it. Each feature is rescaled into the 0 to π range before it becomes a rotation angle (not 2π, since `rz(-2x)` repeats every 2π).
+- **`ad_hoc` (primary).** The actual dataset from the paper, we get it from `qiskit_machine_learning.datasets.ad_hoc_data` with 2 features and gap = 0.3. It's made so that our feature map separates it perfectly, so getting ~100% here just means the code is right, not that quantum beats classical. Seeded so we all get the same points.
+- **`iris` (reality check).** Normal sklearn iris but we only keep 2 of the 4 features (petal length + width) and 2 of the 3 species since we only have 2 qubits. This data has nothing to do with our feature map so it tells us if the method actually does anything on data it wasn't built for. Each feature gets rescaled to 0..π before it becomes a rotation angle (not 2π, `rz(-2x)` repeats every 2π).
 
 ---
 
 ## Results
 
-All runs are on the Qiskit Aer simulator (`AerSimulator` for the kernel, `StatevectorSampler` for the VQC), 4096 shots per kernel entry and 1024 shots per VQC circuit. Scripts to reproduce every number are in `runs/`.
+Everything here is on the simulator (`AerSimulator` for the kernel, `StatevectorSampler` for the VQC). 4096 shots per kernel entry and 1024 per VQC circuit. Each number comes from one of the scripts in `runs/` so you can rerun them.
 
 ### Accuracy
 
@@ -99,11 +95,11 @@ All runs are on the Qiskit Aer simulator (`AerSimulator` for the kernel, `Statev
 | VQC (2 ansatz layers, COBYLA, 200 iters) | ad_hoc | 30 / 10 | 100% |
 | VQC (1 ansatz layer, SPSA, 50 iters) | iris | 30 / 10 | 100% |
 
-ad_hoc is the "does it work" check and iris is the "does it do anything on real data" check. Because of shot noise the kernel numbers can wiggle a little between seeds.
+ad_hoc = does the code work, iris = does it do anything on real data. The kernel numbers can move a bit between seeds because of shot noise.
 
 ### Resource estimation
 
-From `runs/run_resources.py`. "hw" columns are after transpiling to the IBM basis gates (`rz`, `sx`, `x`, `cx`), which is roughly what the circuit would look like on real hardware.
+From `runs/run_resources.py`. The hw columns are after transpiling to IBM's basis gates (`rz`, `sx`, `x`, `cx`) so it's closer to what would actually run on hardware.
 
 | Circuit | Qubits | Depth | Gates | hw depth | hw gates |
 |---|---|---|---|---|---|
@@ -124,27 +120,25 @@ How many circuits one full run costs:
 | VQC, 30 training points, 50 iters | 1,500 | 1,536,000 |
 | VQC, 30 training points, 200 iters | 6,000 | 6,144,000 |
 
-The kernel only needs the upper half of the matrix since K(x,z) = K(z,x), so it is (n choose 2) circuits. The VQC runs one circuit per training point but has to redo all of them on every optimizer step, which is why it ends up costing more.
+Kernel only needs the top half of the matrix since K(x,z) = K(z,x), so it's n choose 2 circuits. The VQC is one circuit per training point but it has to redo all of them every optimizer step, so it ends up costing way more.
 
 ### Figures
 
-Circuit diagrams and plots are in `results/figures/`: the feature map, the overlap circuit, the ansatz, the full VQC circuit, the iris scatter, and the VQC training curve.
+Circuit diagrams + plots are in `results/figures/` (feature map, overlap circuit, ansatz, full VQC circuit, iris scatter, training curve).
 
 ---
 
 ## Verification (unit tests)
 
-Tests are in `tests/` and run with pytest. All 9 pass in about 3 seconds.
+Tests are in `tests/`, 9 total, they all pass in a few seconds.
 
 ```
 python -m pytest
 ```
 
-What they check:
-
-- **Feature map** (`test_feature_map.py`): the circuit is 2 qubits, it rejects a 3-feature input, and applying the map then its inverse lands back on `|00>` every single shot.
-- **Kernel** (`test_kernel.py`): a point compared to itself gives ~1, every entry stays in [0, 1], K(x,z) ≈ K(z,x), the full matrix is symmetric with ones on the diagonal, and a fixed seed gives the exact same answer twice. The tolerance is 0.05 to allow for shot noise.
-- **VQC** (`test_vqc.py`): parity maps `00`/`11` to +1 and `01`/`10` to −1, the circuit is 2 qubits, the expectation value is deterministic for a fixed x and theta (seeded sampler), and the hard label is always ±1.
+- `test_feature_map.py` - circuit is 2 qubits, a 3 feature input gets rejected, and doing the map then its inverse gets you back to `|00>` on every shot
+- `test_kernel.py` - a point vs itself gives ~1, entries stay in [0, 1], K(x,z) and K(z,x) match, the matrix is symmetric with 1s on the diagonal, same seed gives the exact same answer. Tolerance is 0.05 for shot noise
+- `test_vqc.py` - parity gives +1 for `00`/`11` and −1 for `01`/`10`, circuit is 2 qubits, same x and theta gives the same expectation value (sampler is seeded), label is always ±1
 
 
 ## Structure of repository
@@ -172,13 +166,13 @@ What they check:
 ## Setup
 
 ### Required software
-- Python 3.12 or 3.13 (we used 3.13; current Qiskit supports 3.12 to 3.14)
-- Visual Studio Code with the Python extension (optional but it's what we all used)
+- Python 3.12 or 3.13 (we used 3.13, current Qiskit supports 3.12–3.14)
+- Visual Studio Code with the Python extension (what we all used, not required)
 - Git + access to this repository
 
 ### How to replicate environment and setup
 
-1. Clone the repo and open a terminal in the project folder.
+1. Clone the repo and open a terminal in it.
 
    ```
    git clone https://github.com/BWSI-Quantum-Software-2026/Supervised-Learning-With-Quantum-Enhanced-Feature-Spaces.git
@@ -193,19 +187,19 @@ What they check:
    source .venv/bin/activate     # macOS / Linux
    ```
 
-3. Install the dependencies (Qiskit 2.2.3, qiskit-aer, qiskit-machine-learning, numpy, scipy, scikit-learn, matplotlib, pytest).
+3. Install everything (qiskit 2.2.3, qiskit-aer, qiskit-machine-learning, numpy, scipy, scikit-learn, matplotlib, pytest).
 
    ```
    pip install -r requirements.txt
    ```
 
-4. Run the tests to make sure everything is wired up.
+4. Run the tests to check it all works.
 
    ```
    python -m pytest
    ```
 
-5. Run an experiment. They all have to be run from the project root as modules so the `src` imports resolve.
+5. Run whichever experiment. These have to be run from the project root with `-m` or the `src` imports break.
 
    ```
    python -m runs.run_kernel_adhoc
@@ -215,7 +209,7 @@ What they check:
    python -m runs.run_resources
    ```
 
-   The kernel runs take a minute or two since they simulate a few hundred circuits. The VQC ad_hoc run is the slowest one because COBYLA does 200 iterations.
+   Kernel runs take a minute or two (few hundred circuits). The VQC ad_hoc one is the slowest since COBYLA goes for 200 iterations.
 
 ## Team
 
